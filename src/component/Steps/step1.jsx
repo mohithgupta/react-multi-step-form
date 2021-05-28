@@ -38,6 +38,7 @@ const Step1 = ({ state, handleChange, handleNext }) => {
             state,
             name: "email",
             label: "Email Id",
+            type:"email",
             onChange: handleChange,
             required: true
           })}
@@ -90,6 +91,7 @@ const Step1 = ({ state, handleChange, handleNext }) => {
             state,
             name: "phone",
             label: "Phone",
+            type:"number",
             onChange: handleChange,
             required: true
           })}

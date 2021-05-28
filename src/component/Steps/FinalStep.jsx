@@ -15,10 +15,11 @@ const FinalStep = ({ data }) => {
       </Box>    
 
     {/* {JSON.stringify(data, null,2)} */}
+    
     {console.log(data)}
     <Box style={{border:"1px solid black"}}>
       
-      <pre>Organization : {data.organisationname?data.organisationname:"Not Provided"}</pre>
+      <pre>Organization : {data.organizationname?data.organizationname:"Not Provided"}</pre>
       <pre>Email : {data.email}</pre>
       <pre>Location : {data.location}</pre>
       <pre>Country : {data.country?data.country:"Not Provided"}</pre>
