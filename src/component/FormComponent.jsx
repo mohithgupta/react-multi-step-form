@@ -18,7 +18,7 @@ import { styles } from "./common/styles";
 
 class FormComponent extends Component {
   state = {
-    invalideEmail:true,
+    invalidEmail:true,
     invalidPhone:true,
     data: {
       organizationname: "",
@@ -73,13 +73,10 @@ class FormComponent extends Component {
       if(organizationname===""||email===""||location===""||
       country===""||phone===""||dateformat===""||timeformat===""||
       branchname===""||branchaddress===""||designation===""){
-        alert('All the fields with * mark must be filled');
+        alert("All the fields with * mark must be filled");
       }
-      else if(this.state.invalidPhone===true){
-        alert('You have provided invalid Phone Number')
-      }
-      if(this.state.invalideEmail===true){
-        alert('You have provided Invalid Email')
+      else if(this.state.invalidPhone===true || this.state.invalidEmail===true){
+        alert("Invalid Email or Phone Number")
       }
       else{
         handleNextStep()
@@ -90,23 +87,30 @@ class FormComponent extends Component {
       const { data, errors } = this.state;
 
       if(target.name==="email"){
+        let { invalidEmail } = this.state;
         if(!target.value.includes("@") || !target.value.includes(".")){
           errors[target.name] = "Invalid Email";
-          this.state.invalideEmail=true;
+          invalidEmail=true;
+          this.setState({ invalidEmail });  
         }else{
           errors[target.name] = "";
-          this.state.invalideEmail=false;
+          invalidEmail=false;
+          this.setState({ invalidEmail });
         }
       }
       else if(target.name==="phone"){
-        var phoneno = /^\d{10}$/;
+        let phoneno = /^\d{10}$/;
+        let { invalidPhone } = this.state;
+
         if(!target.value.match(phoneno)){
           errors[target.name] = "Invalid Number";
-          this.state.invalidPhone=true;
+          invalidPhone=true;
+          this.setState({ invalidPhone });        
         }else{
           errors[target.name] = "";
-          this.state.invalidPhone=false;
-        } 
+          invalidPhone=false;
+          this.setState({ invalidPhone }); 
+         } 
       }
         data[target.name] = target.value;
         this.setState({ data, errors });
