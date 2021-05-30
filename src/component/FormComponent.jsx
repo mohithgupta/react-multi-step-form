@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import {ToastContainer , toast, Flip} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from "prop-types";
 import {
   Box,
@@ -54,34 +56,20 @@ class FormComponent extends Component {
   render() {
     const { classes } = this.props;
 
-    const handleOnSubmit = (e) => {
-      const {
-        organizationname,
-        email,
-        location,
-        country,
-        phone, 
-        dateformat,
-        timeformat,
-  
-        branchname,
-        branchaddress,
-  
-        designation,
-      } = this.state.data;
- 
-      if(organizationname===""||email===""||location===""||
-      country===""||phone===""||dateformat===""||timeformat===""||
-      branchname===""||branchaddress===""||designation===""){
-        alert("All the fields with * mark must be filled");
-      }
-      else if(this.state.invalidPhone===true || this.state.invalidEmail===true){
-        alert("Invalid Email or Phone Number")
-      }
-      else{
-        handleNextStep()
-      }
-    };
+    const {
+      organizationname,
+      email,
+      location,
+      country,
+      phone, 
+      dateformat,
+      timeformat,
+
+      branchname,
+      branchaddress,
+
+      designation,
+    } = this.state.data;
 
     const handleOnChange = ({ target }) => {
       const { data, errors } = this.state;
@@ -117,16 +105,54 @@ class FormComponent extends Component {
     };
 
     const handleNextStep = () => {
-      let { stepCount } = this.state;
-      console.log("stepCount", stepCount);
-      stepCount = stepCount + 1;
-      this.setState({ stepCount });
+
+      let {stepCount} = this.state;
+      if(stepCount===0){
+          if(organizationname===""||email===""||location===""||
+          country===""||phone===""||dateformat===""||timeformat===""){
+            toast.error("All the fields with * mark must be filled")
+            return;
+          }
+          else if(this.state.invalidEmail){
+            toast.error("Invalid Email")
+            return;
+          }
+          else if(this.state.invalidPhone){
+            toast.error("Invalid Phone Number")
+            return;
+          } 
+        }
+      else if(stepCount===1){
+          if(branchname===""||branchaddress===""){
+            toast.error("All the fields with * mark must be filled")
+            return;
+          }
+        }
+      else if(stepCount===3){
+          if(designation===""){
+            toast.error("All the fields with * mark must be filled")
+            return;
+          }
+      }
+        console.log("stepCount", stepCount);
+        stepCount = stepCount + 1;
+        this.setState({ stepCount });
+
     };
+
     const handleBackStep = () => {
       let { stepCount } = this.state;
       stepCount = stepCount - 1;
       this.setState({ stepCount });
     };
+
+    const stepnumber = document.getElementsByClassName("MultiStepIcon-Text");
+
+    for(var i=0;i<stepnumber.length;i++){
+        stepnumber[i].addEventListener("click", (e)=>{
+          console.log(e.target)
+        })
+    }
 
     const getStepContent = (step) => {
       switch (step) {
@@ -161,7 +187,7 @@ class FormComponent extends Component {
             <Step4
               state={this.state}
               handleChange={handleOnChange}
-              handleSubmit={handleOnSubmit}
+              handleNext={handleNextStep}
               handlePrev={handleBackStep}
             />
           );
@@ -172,7 +198,7 @@ class FormComponent extends Component {
             <Step1
               state={this.state}
               handleChange={handleOnChange}
-              handleSubmit={handleNextStep}
+              handleNext={handleNextStep}
             />
           );
       }
@@ -181,7 +207,7 @@ class FormComponent extends Component {
     return (
       <Grid container className={classes.formContainer}>
         <Grid item xs={12} sm={7}>
-          <form onSubmit={this.handleSubmit} className={classes.form}>
+          <form className={classes.form}>
             
               <Box pt={2}>
                 {renderText({
@@ -191,14 +217,26 @@ class FormComponent extends Component {
                   align: "center",
                 })}
               </Box>
-              <Stepper activeStep={this.state.stepCount} alternativeLabel>
+    
+              <Stepper activeStep={this.state.stepCount} alternativeLabel >
                 {this.state.steps.map((item) => (
                   <Step key={item.label}>
                     <StepLabel>{item.label}</StepLabel>
                   </Step>
                 ))}
               </Stepper>
-           
+
+              <ToastContainer
+                  position="top-center"
+                  autoClose={5000}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick
+                  // rtl={false}
+                  pauseOnFocusLoss
+                  pauseOnHover
+                  transition={Flip}
+                />
             {getStepContent(this.state.stepCount)}
           </form>
         </Grid>

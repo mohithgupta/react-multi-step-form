@@ -11,7 +11,7 @@ const Step4 = ({
   state,
   handleChange,
   handlePrev,
-  handleSubmit,
+  handleNext,
 }) => {
   return (
     <Paper style={styles.steps}>
@@ -55,7 +55,7 @@ const Step4 = ({
         <Box ml={2}>
           {renderButton({ 
             label: "Submit",
-            onClick: handleSubmit 
+            onClick: handleNext 
           })}
         </Box>
       </Grid>
